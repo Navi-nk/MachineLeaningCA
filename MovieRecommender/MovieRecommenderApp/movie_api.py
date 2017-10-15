@@ -12,7 +12,8 @@ def getMovieId(movie):
     url = base_search_url + api_key_url + search_append
     response = requests.get(url)
     movie_id = None
-    data = json.loads(response.content)
+    data = json.loads(response.content.decode('utf-8'))
+#   data = json.loads(response.content)
     movie_id = data['results'][0]['id']
 #    for i in range(len(data['results'])):
 #        search_title = data['results'][i]['title'].lower()
@@ -31,7 +32,8 @@ def getMovieDetails(movie):
         return
     url = base_movie_url + str(movie_id) + api_key_url
     response = requests.get(url)
-    data = json.loads(response.content)
+    data = json.loads(response.content.decode('utf-8'))
+    #data = json.loads(response.content)
     print(data)
     with open('SearchMovieDetails.txt', 'w') as md:
         md.write(str(data))
