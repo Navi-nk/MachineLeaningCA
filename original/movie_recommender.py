@@ -507,16 +507,16 @@ df = df_filling.copy(deep=True)
 df.reset_index(inplace = True, drop = True)
 
 ## 8. Recommendation Engine
-dum = find_similarities(df, 120, del_sequels = True, verbose = True)
-#print(dum)
-#dum = find_similarities(df, 12, del_sequels = True, verbose = True)
-#print(dum)
-#dum = find_similarities(df, 2, del_sequels = True, verbose = True)
-#print(dum)
+dum = find_similarities(df, 12, del_sequels = False, verbose = True)
+print(dum)
+dum = find_similarities(df, 12, del_sequels = True, verbose = True)
+print(dum)
+dum = find_similarities(df, 2, del_sequels = True, verbose = True)
+print(dum)
 
 
 ## 9. Test
-#selection = dict()
-#for i in range(0, 20, 2):
- #   selection[i] = find_similarities(df, i, del_sequels = False, verbose = True)
-#print(selection)
+selection = dict()
+for i in range(0, 20, 2):
+    selection[i] = find_similarities(df, i, del_sequels = True, verbose = True)
+print(selection)
