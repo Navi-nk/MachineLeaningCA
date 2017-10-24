@@ -347,45 +347,47 @@ movies = load_tmdb_movies("./data/tmdb_5000_movies.csv")
 df_initial = convert_to_original_format(movies, credits)
 
 ## 2. List no. of occurrences based on keyword 'plot_keywords'
-set_keywords = set()
-for liste_keywords in df_initial['plot_keywords'].str.split('|').values:
-    if isinstance(liste_keywords, float): continue  # only happen if liste_keywords = NaN
-    set_keywords = set_keywords.union(liste_keywords)
-keyword_occurences, dum = count_word(df_initial, 'plot_keywords', set_keywords)
-print('List no. of occurrences based on keyword \'plot_keywords\':\n')
-print(keyword_occurences[:5])
+#set_keywords = set()
+#for liste_keywords in df_initial['plot_keywords'].str.split('|').values:
+#    if isinstance(liste_keywords, float): continue  # only happen if liste_keywords = NaN
+#    set_keywords = set_keywords.union(liste_keywords)
+#keyword_occurences, dum = count_word(df_initial, 'plot_keywords', set_keywords)
+#print('List no. of occurrences based on keyword \'plot_keywords\':\n')
+#print(keyword_occurences[:5])
 
 ## 3. List no. of occurrences based on genres
-genre_labels = set()
-for s in df_initial['genres'].str.split('|').values:
-    genre_labels = genre_labels.union(set(s))
-keyword_occurences, dum = count_word(df_initial, 'genres', genre_labels)
-print('List no. of occurrences based on genres:\n')
-print(keyword_occurences[:5])
+#genre_labels = set()
+#for s in df_initial['genres'].str.split('|').values:
+#    genre_labels = genre_labels.union(set(s))
+#keyword_occurences, dum = count_word(df_initial, 'genres', genre_labels)
+#print('List no. of occurrences based on genres:\n')
+#print(keyword_occurences[:5])
 
 ## 4. Remove duplicate entries
-df_temp = df_initial
-list_var_duplicates = [
-                      'movie_title',
-                      'title_year',
-                      'director_name'
-                      ]
-liste_duplicates = df_temp['movie_title'].map(df_temp['movie_title'].value_counts() > 1)
-print("No. of duplicate entries: {}".format(len(df_temp[liste_duplicates][list_var_duplicates])))
-print("Duplicate entries but values differ:\n%s"%df_temp[liste_duplicates][list_var_duplicates])
-df_duplicate_cleaned = df_temp
+#df_temp = df_initial
+#list_var_duplicates = [
+#                      'movie_title',
+#                      'title_year',
+#                      'director_name'
+#                      ]
+#liste_duplicates = df_temp['movie_title'].map(df_temp['movie_title'].value_counts() > 1)
+#print("No. of duplicate entries: {}".format(len(df_temp[liste_duplicates][list_var_duplicates])))
+#print("Duplicate entries but values differ:\n%s"%df_temp[liste_duplicates][list_var_duplicates])
+#df_duplicate_cleaned = df_temp
 
 ## 5. Remove duplicated keywords and replace it with main keyword
-keywords, keywords_roots, keywords_select = keywords_inventory(df_duplicate_cleaned,
+#keywords, keywords_roots, keywords_select = keywords_inventory(df_duplicate_cleaned,
+keywords, keywords_roots, keywords_select = keywords_inventory(df_initial,
                                                                colonne = 'plot_keywords')
-icount = 0
-for s in keywords_roots.keys():
-    if len(keywords_roots[s]) > 1: 
-        icount += 1
-        if icount < 15: print(icount, keywords_roots[s], len(keywords_roots[s]))
-df_keywords_cleaned = replacement_df_keywords(df_duplicate_cleaned,
-	                                                             keywords_select,
-                                                                 roots = True)
+#icount = 0
+#for s in keywords_roots.keys():
+#   if len(keywords_roots[s]) > 1: 
+#        icount += 1
+#       if icount < 15: print(icount, keywords_roots[s], len(keywords_roots[s]))
+#df_keywords_cleaned = replacement_df_keywords(df_duplicate_cleaned,
+df_keywords_cleaned = replacement_df_keywords(df_initial,
+	                                                   keywords_select,
+                                                       roots = True)
 keyword_occurences, keywords_count = count_word(df_keywords_cleaned,
 	                                                              'plot_keywords',
 	                                                              keywords)
@@ -465,7 +467,8 @@ new_col_order = [
                  'movie_imdb_link',
                  'color',
                  'duration',
-                 'gross'
+                 'gross',
+                 'overview'
                  ]
 new_col_order = [col for col in new_col_order if col not in LOST_COLUMNS]
 new_col_order = [IMDB_COLUMNS_TO_REMAP[col] 
@@ -489,18 +492,18 @@ missing_year_info = df_filling[df_filling['title_year'].isnull()][[
 print('Missing Year Info:\n')
 print(missing_year_info[:10])
 df_filling = fill_year(df_filling)
-icount = 0
-for index, row in df_filling[df_filling['plot_keywords'].isnull()].iterrows():
-    icount += 1
-    liste_mot = row['movie_title'].strip().split()
+
+for index, row in df_filling.iterrows():
+    if isinstance(row['overview'], str): 
+        liste_mot = row['overview'].replace('\D+', '').strip().split()
+    else:
+        continue
     new_keyword = []
     for s in liste_mot:
         lemma = get_synonymes(s)
         for t in list(lemma):
             if t in keywords: 
                 new_keyword.append(t)                
-    if new_keyword and icount < 15: 
-        print('{:<50} -> {:<30}'.format(row['movie_title'], str(new_keyword)))
     if new_keyword:
         df_filling.set_value(index, 'plot_keywords', '|'.join(new_keyword))
 df = df_filling.copy(deep=True)
@@ -516,7 +519,7 @@ dum = find_similarities(df, 120, del_sequels = True, verbose = True)
 
 
 ## 9. Test
-#selection = dict()
-#for i in range(0, 20, 2):
- #   selection[i] = find_similarities(df, i, del_sequels = False, verbose = True)
+selection = dict()
+for i in range(0, 20, 2):
+    selection[i] = find_similarities(df, i, del_sequels = False, verbose = True)
 #print(selection)
