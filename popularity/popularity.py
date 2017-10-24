@@ -75,7 +75,7 @@ def popularity(n):
 
 # Remove calling function for TESTING
 
-n = [1 ,2 , 3, 11, 12, 13, 20, 25, 28, 57, 78, 83, 200, 800, 500]
+n = [1 ,2 , 3, 11, 12, 13, 20, 25, 28, 57, 78, 83, 99, 200, 800, 500]
 
 result = popularity(n)
          
