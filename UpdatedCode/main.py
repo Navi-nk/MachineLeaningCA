@@ -1,8 +1,8 @@
 
 #Custom libs
-from DataLoad import *
-from ProcessKeywords import *
-from Model import *
+from dataload import *
+from processkeywords import *
+from model import *
 
 #Load DataSet
 credits = load_tmdb_credits("../data/tmdb_5000_credits.csv")

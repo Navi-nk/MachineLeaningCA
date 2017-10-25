@@ -47,12 +47,10 @@ def replacement_df_keywords(df, dico_remplacement, roots = False):
         df_new.set_value(index, 'plot_keywords', '|'.join(nouvelle_liste)) 
     return df_new
 
-
 def get_synonymes(keyword):
     lemma = set()
     for ss in wordnet.synsets(keyword):
         for w in ss.lemma_names():
-            #_______________________________
             # We just get the 'nouns':
             index = ss.name().find('.')+1
             if ss.name()[index] == 'n': lemma.add(w.lower().replace('_',' '))
@@ -60,7 +58,6 @@ def get_synonymes(keyword):
 
 def test_keyword(keyword, key_count, threshold):
     return (False , True)[key_count.get(keyword, 0) >= threshold]
-
 
 def count_word(df, ref_col, liste):
     keyword_count = dict()
@@ -74,7 +71,6 @@ def count_word(df, ref_col, liste):
         keyword_occurences.append([k,v])
     keyword_occurences.sort(key = lambda x:x[1], reverse = True)
     return keyword_occurences
-
 
 def replacement_df_low_frequency_keywords(df, keyword_occurences):
     df_new = df.copy(deep = True)
@@ -90,11 +86,26 @@ def replacement_df_low_frequency_keywords(df, keyword_occurences):
         df_new.set_value(index, 'plot_keywords', '|'.join(nouvelle_liste))
     return df_new
 
+def supress_low_frequency_keywords(df_keywords_cleaned,replacement_dict):
+    #replacement of keyword varieties by the main keyword
+    df_keywords_synonyms = replacement_df_keywords(df_keywords_cleaned,
+                                                                 replacement_dict,
+                                                                 roots = False)
+    keywords, keywords_roots, keywords_select = keywords_inventory(df_keywords_synonyms,
+                                                                                     column = 'plot_keywords')
+    new_keyword_occurences = count_word(df_keywords_synonyms,
+                                                            'plot_keywords',
+                                                             keywords)
+    #supressing keywords with frequency 3
+    df_keywords_occurence = replacement_df_low_frequency_keywords(df_keywords_synonyms,
+                                                                                    new_keyword_occurences)
+    keywords, keywords_roots, keywords_select = keywords_inventory(df_keywords_occurence,
+                                                                                 column = 'plot_keywords')
+    return df_keywords_occurence,keywords
 
 
 
 def replace_synonyms(df_keywords_cleaned, keywords):
-
     # Count of the keywords occurences
     keyword_occurences = count_word(df_keywords_cleaned,'plot_keywords',keywords)
 
@@ -110,7 +121,6 @@ def replace_synonyms(df_keywords_cleaned, keywords):
         if num_occurences > 5: continue  # only the keywords that appear less than 5 times
         
         lemma = get_synonymes(keyword)
-    
         if len(lemma) == 0: continue     # case of the plurals
 
         liste_keywords = [(s, key_count[s]) for s in lemma
@@ -125,27 +135,10 @@ def replace_synonyms(df_keywords_cleaned, keywords):
     for key, value in replacement_dict.items():
         if value in replacement_dict.keys():
             replacement_dict[key] = replacement_dict[value] 
-
-
-    #replacement of keyword varieties by the main keyword
-    df_keywords_synonyms = replacement_df_keywords(df_keywords_cleaned,
-                                                                 replacement_dict,
-                                                                 roots = False)
-
-    keywords, keywords_roots, keywords_select = keywords_inventory(df_keywords_synonyms,
-                                                                                     column = 'plot_keywords')
-    new_keyword_occurences = count_word(df_keywords_synonyms,
-                                                            'plot_keywords',
-                                                             keywords)
-
-    #supressing keywords with frequency 3
-    df_keywords_occurence = replacement_df_low_frequency_keywords(df_keywords_synonyms,
-                                                                                    new_keyword_occurences)
-
-    keywords, keywords_roots, keywords_select = keywords_inventory(df_keywords_occurence,
-                                                                                 column = 'plot_keywords')
+    #remove less frequency keywords
+    df_keywords_occurence,keywords = supress_low_frequency_keywords(df_keywords_cleaned,replacement_dict)
+    
     return df_keywords_occurence, keywords
-
 
 def add_overview_keywords(df, keywords):
     for index, row in df.iterrows():
@@ -162,5 +155,3 @@ def add_overview_keywords(df, keywords):
         if new_keyword:
             df.set_value(index, 'plot_keywords', '|'.join(new_keyword)) 
     return df    
-
-
