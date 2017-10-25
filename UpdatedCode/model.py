@@ -45,7 +45,7 @@ def recommend(df, id_entry):
     for s in df['genres'].str.split('|').values:
         liste_genres = liste_genres.union(set(s))    
     variables = entry_variables(df_copy, id_entry)
-    variables += list(liste_genres)
+    variables += list(liste_genres) 
     df_new = add_variables(df_copy, variables)
     X = df_new.as_matrix(variables)
     nbrs = NearestNeighbors(n_neighbors=31, algorithm='auto', metric='euclidean').fit(X)
@@ -98,10 +98,11 @@ def critere_selection(title_main, max_users, annee_ref, titre, annee, imdb_score
         note = imdb_score**2 * facteur_1 * facteur_2
     return note
 
-def add_to_selection(film_selection, parametres_films):    
+def add_to_selection(film_selection, parametres_films,id_entry):    
     film_list = film_selection[:]
     icount = len(film_list)    
     for i in range(31):
+        if(id_entry == parametres_films[i][5]) : continue
         already_in_list = False
         for s in film_selection:
             if s[0] == parametres_films[i][0]: already_in_list = True
@@ -131,9 +132,10 @@ def find_similarities(df, id_entry, del_sequels = True, verbose = False):
     list_films = recommend(df, id_entry)
     parameters_films = extract_parameters(df, list_films)
     film_selection = []
-    film_selection = add_to_selection(film_selection, parameters_films)
-    if del_sequels: film_selection = remove_sequels(film_selection)
-    film_selection = add_to_selection(film_selection, parameters_films)
+    film_selection = add_to_selection(film_selection, parameters_films,id_entry)
+    if del_sequels: 
+        film_selection = remove_sequels(film_selection)
+        film_selection = add_to_selection(film_selection, parameters_films,id_entry)
     selection_titles = []
     for i,s in enumerate(film_selection):
         selection_titles.append([s[0].replace(u'\xa0', u''), s[5]])
