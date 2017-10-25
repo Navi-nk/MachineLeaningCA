@@ -21,12 +21,11 @@ df_keywords_cleaned = replacement_df_keywords(formatted_data,
 #suppress all the keywords that appear in less than 3 films
 df_keywords_occurence, keywords = replace_synonyms(df_keywords_cleaned, keywords)
 
-df_keywords_improved = add_overview_keywords(df_keywords_occurence,keywords)
+#add movie overiew to the list of keywords
+df_keywords_improved = add_overview_keywords(df_keywords_occurence,keywords,True)
 
 df = df_keywords_improved.copy(deep=True)
 df.reset_index(inplace = True, drop = True)
-
-
 
 selection = dict()
 for i in range(0, 20, 2):

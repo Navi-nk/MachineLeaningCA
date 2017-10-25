@@ -140,7 +140,8 @@ def replace_synonyms(df_keywords_cleaned, keywords):
     
     return df_keywords_occurence, keywords
 
-def add_overview_keywords(df, keywords):
+def add_overview_keywords(df, keywords, bypass=False):
+    if bypass : return df
     for index, row in df.iterrows():
         if isinstance(row['overview'], str): 
             liste_mot = row['overview'].replace('\D+', '').strip().split()
