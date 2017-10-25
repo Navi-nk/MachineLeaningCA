@@ -1,7 +1,6 @@
 from django.shortcuts import render
-from MovieRecommenderApp.movie_api import getMovieDetails
+from movie_api import call_recommend
 
-# Create your views here.
 from django.http import HttpResponse
 
 def hello(request):
@@ -15,7 +14,7 @@ def getmoviehomepage(request):
 def getresults(request):
     if request.method=="GET":
         data =  request.GET.get('search')
-        getMovieDetails(data)
-    return render(request, "./MovieRecommender/views/home.html", {"output":"Movie successfully saved in SearchMovieDetails.txt(under django project parent directory)"})
+        recommended = call_recommend(data)
+    return render(request, "./MovieRecommender/views/home.html", {"output":str(recommended)})
    
    

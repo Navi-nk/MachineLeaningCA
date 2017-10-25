@@ -18,8 +18,12 @@ def getMovieIdTitle(movie):
     response = requests.get(url)
     movie_id = None
     data = json.loads(response.content.decode('utf-8'))
-    movie_id = data['results'][0]['id']
-    movie_title = data['results'][0]['title']
+    try:
+        movie_id = data['results'][0]['id']
+        movie_title = data['results'][0]['title']
+    except Exception as e:
+        movie_id = None
+        movie_title = None
     return movie_id, movie_title
 
 def getMovieKeywords(movie_id):
@@ -52,43 +56,6 @@ def getMovieDetailsOnline(movie_id):
     details['crew'] = credits['crew']
     return details
 
-def writeIntoCreditsCSV(data):
-    fields=[data['id'],
-            data['title'],
-            data['cast'],
-            data['crew']]
-    with open('../data/tmdb_5000_credits.csv', 'a') as f:
-        writer = csv.writer(f)
-        writer.writerow(fields)
-
-def writeIntoMoviesCSV(data):
-    fields=[data['budget'],data['genres'],data['homepage'],data['id'],
-            data['keywords'],data['original_language'],data['original_title'],
-            data['overview'],data['popularity'],data['production_companies'],
-            data['production_countries'],data['release_date'],data['revenue'],
-            data['runtime'],data['spoken_languages'],data['status'],data['tagline'],
-            data['title'],data['vote_average'],data['vote_count']]
-    with open('../data/tmdb_5000_movies.csv', 'a') as f:
-        writer = csv.writer(f)
-        writer.writerow(fields)
-
-# def call_recommend(movie):
-#     movie_id, movie_title = getMovieIdTitle(movie)
-#     if not movie_id:
-#         print("Movie not found. Quitting!!")
-#         return
-#     if not isMovieInCredits(movie_id):
-#         print("Getting movie details online!")
-#         details = getMovieDetailsOnline(movie_id)
-#         print("Writing into csv file")
-#         writeIntoCreditsCSV(details)
-#         writeIntoMoviesCSV(details)
-#         print("Training with new included data")
-#         get_combined_data_frame(True)
-#     else:
-#         print("Movie found in csv file")
-#     movie_recommender(movie_title)
-
 def load_movie(df):
     df['release_date'] = pd.to_datetime(df['release_date']).apply(lambda x: x.date())
     json_columns = [
@@ -99,23 +66,24 @@ def load_movie(df):
                    'spoken_languages'
                    ]
     for column in json_columns:
-        df[column] = df[column].apply(json.loads)
+        df[column] = df[column].apply(json.dumps)
     return df
 
 def load_credit(df):
     json_columns = [
-                   'cast', 'crew'
+                   'cast',
+                   'crew',
                    ]
     for column in json_columns:
-        df[column] = df[column].apply(json.loads)
+        df[column] = df[column].apply(json.dumps)
     return df
 
-# not working as of now
 def call_recommend(movie):
     movie_id, movie_title = getMovieIdTitle(movie)
     if not movie_id:
-        print("Movie not found. Quitting!!")
-        return
+        recommended = "Movie not found. Type correctly!!"
+        print(recommended)
+        return recommended
     if not isMovieInCredits(movie_id):
         print("Getting movie details online!")
         data = getMovieDetailsOnline(movie_id)
@@ -126,10 +94,25 @@ def call_recommend(movie):
                   data['runtime'], data['spoken_languages'], data['status'], data['tagline'],
                   data['title'], data['vote_average'], data['vote_count']]
         credits = [data['id'], data['title'], data['cast'], data['crew']]
-        mf = pd.DataFrame([movies])
-        cf = pd.DataFrame([credits])
-        new_df = convert_to_original_format(load_movie(mf), load_credit(cf))
-        print(new_df)
+        mf = load_movie(pd.DataFrame([movies], columns=['budget', 'genres', 'homepage',
+        	                                            'id','keywords','original_language',
+        	                                            'original_title','overview','popularity',
+        	                                            'production_companies','production_countries',
+        	                                            'release_date','revenue','runtime',
+        	                                            'spoken_languages','status','tagline',
+        	                                            'title','vote_average','vote_count']))
+        cf = load_credit(pd.DataFrame([credits], columns=['id', 'title', 'cast', 'crew']))
+        with open('../data/tmdb_5000_movies.csv', 'a') as f:
+            mf.to_csv(f, header=None, index=None)
+        with open('../data/tmdb_5000_credits.csv', 'a') as f:
+            cf.to_csv(f, header=None, index=None)
+        print("Training with new data")
+        get_combined_data_frame(True)
+    else:
+        print("Movie found in the database!")
+    print("Running recommendation")
+    recommended = movie_recommender(movie_title)
+    return recommended
 
 if __name__ == '__main__':
     call_recommend('thor ragnarok')
