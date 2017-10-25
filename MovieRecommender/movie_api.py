@@ -29,13 +29,13 @@ def getMovieIdTitle(movie):
 def getMovieKeywords(movie_id):
     url = base_movie_url + str(movie_id) + '/keywords' + api_key_url
     response = requests.get(url)
-    keywords = json.loads(response.content)
+    keywords = json.loads(response.content.decode('utf-8'))
     return keywords
 
 def getMovieCredits(movie_id):
     url = base_movie_url + str(movie_id) + '/credits' + api_key_url
     response = requests.get(url)
-    credits = json.loads(response.content)
+    credits = json.loads(response.content.decode('utf-8'))
     return credits
 
 def isMovieInCredits(movie_id):
