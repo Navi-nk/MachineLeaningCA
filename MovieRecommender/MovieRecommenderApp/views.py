@@ -20,9 +20,8 @@ def getresults(request):
         movieStr = str(recommended)
         movieStr = movieStr.replace("[","")
         movieStr = movieStr.replace("]","")
-        print('hello#######################')
         print(movieStr)
-        movieArr = movieStr.split(',')
+        movieArr = movieStr.split('\',')
         imageurl = ''
         imgarray = []
         for movie in movieArr:
