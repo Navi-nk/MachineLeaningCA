@@ -30,4 +30,4 @@ def movie_recommender(movie_title):
     return movies_recommended
 
 if __name__ == '__main__':
-    movie_recommender('The Avengers')
+    movie_recommender('Doctor Strange')

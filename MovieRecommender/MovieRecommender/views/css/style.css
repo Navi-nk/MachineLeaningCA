@@ -1,19 +1,20 @@
 /* Movie Recommender Engine */
 
-
-input#search{
+#search{
   width: 300px;
   height: 50px;
   background: #2b303b;
   border: none;
   font-size: 10pt;
-  float: left;
-  color: #262626;
+  
+  margin: 10px;
+
+  color: white;
   padding-left: 45px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
- 
+
    
     -webkit-transition: background .55s ease;
   -moz-transition: background .55s ease;
@@ -21,6 +22,57 @@ input#search{
   -o-transition: background .55s ease;
   transition: background .55s ease;
 }
+
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: lightblue;
+}
+::-moz-placeholder { /* Firefox 19+ */
+  color: lightblue;
+}
+:-ms-input-placeholder { /* IE 10+ */
+  color: lightblue;
+}
+:-moz-placeholder { /* Firefox 18- */
+  color: lightblue;
+}
+
+.loader{
+  position: absolute
+  left: 50%;
+  top: 50%;
+  width: $loader-size;
+  height: $loader-size;
+  margin-left: ($loader-size / -2);
+  margin-top: ($loader-size / -2);
+  border-radius: 100%;
+  animation-name: loader;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-duration: 4s;
+}
+.searchicon{
+	background-color: orange;
+	height: 50px;
+	position:absolute;
+	width:50px;
+	cursor: pointer;
+}
+
+.input-search-field{
+	height: 50px;
+	
+}
+.search1{
+	height: 50px;
+	width:0px;
+}
+i.fa.fa-search.fa-2x{
+	margin-top: 10px;
+	text-align:center;
+	width:100%;
+}
+
+
 
 
 

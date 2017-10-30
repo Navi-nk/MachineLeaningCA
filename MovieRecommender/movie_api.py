@@ -113,6 +113,17 @@ def call_recommend(movie):
     print("Running recommendation")
     recommended = movie_recommender(movie_title)
     return recommended
+def getMovieImage(movie):
+    search_append = r'&query=%s&page=1&include_adult=false'%(movie)
+    url = base_search_url + api_key_url + search_append
+    response = requests.get(url)
+    movie_id = None
+    data = json.loads(response.content.decode('utf-8'))
+    try:
+        movie_image = data['results'][0]['poster_path']
+    except Exception as e:
+        movie_image = None
+    return movie_image
 
 if __name__ == '__main__':
     call_recommend('thor ragnarok')

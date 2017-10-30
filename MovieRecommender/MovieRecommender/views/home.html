@@ -9,36 +9,33 @@
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>	
 	
+	
+	
+	
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	
+	<!-- <link rel="stylesheet" href="css/font-awesome.min.css"> -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script>
 	
-	$().onclick(function
+	$(document).ready(function() {
+	$('.search').animate({width:'250px'}, 1000, function(){});
+	
+	$('.searchbutton').on('click' , function(){
+		$('body').css({'background-image':'url(https://i.pinimg.com/originals/3d/80/64/3d8064758e54ec662e076b6ca54aa90e.gif)'});
+		$('img').attr({'src':''});
+		$('.searchresulttext').css({'display':'block'});
+		
+	});
+	});
 	</script>
 	
+	<script src="js/main.js"></script>	
+	
+	<link rel="stylesheet" href="css/style.css">
+	
 	<style>
-	#search{
-  width: 300px;
-  height: 50px;
-  background: #2b303b;
-  border: none;
-  font-size: 10pt;
-  
-  margin: 10px;
-
-  color: white;
-  padding-left: 45px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-
-   
-    -webkit-transition: background .55s ease;
-  -moz-transition: background .55s ease;
-  -ms-transition: background .55s ease;
-  -o-transition: background .55s ease;
-  transition: background .55s ease;
-}
+	
 
 ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
   color: lightblue;
@@ -53,22 +50,89 @@
   color: lightblue;
 }
 
+.loader{
+  position: absolute
+  left: 50%;
+  top: 50%;
+  width: $loader-size;
+  height: $loader-size;
+  margin-left: ($loader-size / -2);
+  margin-top: ($loader-size / -2);
+  border-radius: 100%;
+  animation-name: loader;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-duration: 4s;
+}
+.searchicon{
+	background-color: orange;
+	height: 50px;
+	position:absolute;
+	width:50px;
+	cursor: pointer;
+}
 
+.input-search-field{
+	height: 50px;
+	margin: 10px;
+	
+}
+.search{
+	height: 50px;
+	width:0px;
+	background: #2b303b;
+	border: none;
+	padding-left: 45px;
+	color: white;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+i.fa.fa-search.fa-2x{
+	margin-top: 10px;
+	text-align:center;
+	width:100%;
+}
 
+.input-row{
+margin: 30px;
+}
 	</style>
 
 	
 </head>
-<body>
+<body style="background: black no-repeat center center fixed;background-size: cover;">
+	
+	
+	<!--<div class="searchcontainer" align="center">
+	
+	<span class="searchicon" ><i class="fa fa-search fa-2x" aria-hidden="true" ></i></span><input id="search" name="search" class="form-control input-lg" placeholder="Search Movies" tabindex="1"></input>
+	<input type="submit"  class="btn btn-primary searchbutton" style=" margin-left: 100px;" value="Search">
+	
+	</div> -->
+	
 	
 	<form action="/result" method="get">
-	<div class="searchcontainer">
-	
-	<input id="search" name="search" class="form-control input-lg" placeholder="Search Movies" tabindex="1"></input>
-	<input type="submit"  class="btn btn-primary" style=" margin-left: 100px;" value="Search"></button>
+	<div class="input-row" align="center">
+		<div class="input-search-field">
+			<input type="text" class="search" name="search" placeholder="Search Movies" id="search" value="" required> 
+			<span class="searchicon" ><i class="fa fa-search fa-2x" aria-hidden="true" ></i></span>
+		</div>
+		<input type="submit"  class="btn btn-primary searchbutton" style=" margin: 10px;" value="Search">
 	</div>
 	{{output}}
 	</form>
+	
+	
+	<h1 style="color: white;text-align:center;" class="searchresulttext">{{movieresult}}</h1>
+	
+	<div style="text-align: center;">
+	<img src="https://image.tmdb.org/t/p/w500/{{img.0}}"/>
+	<img src="https://image.tmdb.org/t/p/w500/{{img.1}}" />
+	<img src="https://image.tmdb.org/t/p/w500/{{img.2}}" />
+	<img src="https://image.tmdb.org/t/p/w500/{{img.3}}" />
+	<img src="https://image.tmdb.org/t/p/w500/{{img.4}}" />
+	</div>
 	
 
 
