@@ -142,4 +142,4 @@ def find_similarities(df, id_entry, del_sequels = True, verbose = False):
     for i,s in enumerate(film_selection):
         selection_titles.append([s[0].replace(u'\xa0', u''), s[5]])
         if verbose: print("No{:<2}     -> {:<30}".format(i+1, s[0]))
-    return selection_titles
+    return selection_titles, parameters_films
