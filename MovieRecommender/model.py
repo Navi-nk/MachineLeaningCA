@@ -65,7 +65,9 @@ def extract_parameters(df, liste_films):
                                                    'title_year',
                                                    'imdb_score', 
                                                    'num_user_for_reviews', 
-                                                   'num_voted_users'
+                                                   'num_voted_users',
+                                                   'companies', 
+                                                   'popularity'
                                                    ]])
         parametres_films[i].append(index)
         max_users = max(max_users, parametres_films[i][4] )

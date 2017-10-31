@@ -21,6 +21,7 @@ def movie_recommender(movie_title):
     df = get_combined_data_frame()
     movies_recommended = []
     id_entry = get_entry_id(df, movie_title)
+    print("recommended for:%s"%movie_title)
     recommended_movies = find_similarities(df, id_entry=id_entry)
     for i in range(len(recommended_movies)):
         movie_title = recommended_movies[i][0]

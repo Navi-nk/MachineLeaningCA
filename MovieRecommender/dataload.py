@@ -16,7 +16,9 @@ new_col_order = [
                  'vote_average',
                  'duration',
                  'gross',
-                 'overview'
+                 'overview',
+                 'companies',
+                 'popularity'
                  ]
 
 
@@ -73,6 +75,7 @@ def convert_to_original_format(movies, credits):
     tmdb_movies.rename(columns=TMDB_TO_IMDB_SIMPLE_EQUIVALENCIES, inplace=True)
     tmdb_movies['title_year'] = pd.to_datetime(tmdb_movies['release_date']).apply(lambda x: x.year)
     tmdb_movies['country'] = tmdb_movies['production_countries'].apply(lambda x: safe_access(x, [0, 'name']))
+    tmdb_movies['companies'] = tmdb_movies['production_companies'].apply(lambda x: safe_access(x, [0, 'name']))
     tmdb_movies['language'] = tmdb_movies['spoken_languages'].apply(lambda x: safe_access(x, [0, 'name']))
     tmdb_movies['director_name'] = credits['crew'].apply(get_director)
     tmdb_movies['actor_1_name'] = credits['cast'].apply(lambda x: safe_access(x, [1, 'name']))
