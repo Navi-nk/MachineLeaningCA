@@ -21,13 +21,56 @@
 	$(document).ready(function() {
 	$('.search').animate({width:'250px'}, 1000, function(){});
 	
-	$('.searchbutton').on('click' , function(){
-		$('body').css({'background-image':'url(https://i.pinimg.com/originals/3d/80/64/3d8064758e54ec662e076b6ca54aa90e.gif)'});
+	
+	
+	$('.searchicon').on('click' , function(){
+	    data = "Searching.......";
+	
+
+        $('.searchresulttext').text(data);
+
+		
 		$('img').attr({'src':''});
 		$('.searchresulttext').css({'display':'block'});
 		
+		
+		var moviename = $('.search').val();
+		$.ajax({
+		type: "GET",
+		url:"/hello",
+		data: {'moviename':moviename},
+		success: function(data)
+					{
+						imageurl = "https://image.tmdb.org/t/p/w500/" + data;
+						$('#movietosearch').attr('src',imageurl);
+						$('.searchresulttext').text('');
+						$('.moviebox').css({'display':'block'});
+						$('body').css({'background-image':'url(https://i.pinimg.com/originals/3d/80/64/3d8064758e54ec662e076b6ca54aa90e.gif)'});
+						var count = 0;
+						setInterval(function(){
+									data = $('.moviebox').text()+".";
+									
+									count++;
+									if(count%5==0)
+									{
+									$('.moviebox').text("Processing similar movies");
+									}
+									else
+									{
+									$('.moviebox').text(data);
+									}
+									
+						}, 1000);
+					},
+
+		})
+		window.location.href = "/result?search="+moviename;
+		
 	});
 	});
+	
+	
+	
 	</script>
 	
 	<script src="js/main.js"></script>	
@@ -112,18 +155,23 @@ margin: 30px;
 	</div> -->
 	
 	
-	<form action="/result" method="get">
+	
 	<div class="input-row" align="center">
 		<div class="input-search-field">
 			<input type="text" class="search" name="search" placeholder="Search Movies" id="search" value="" required> 
 			<span class="searchicon" ><i class="fa fa-search fa-2x" aria-hidden="true" ></i></span>
-		</div>
-		<input type="submit"  class="btn btn-primary searchbutton" style=" margin: 10px;" value="Search">
+			
+			
+		</div>		
+		
 	</div>
-	{{output}}
-	</form>
 	
-	<h1 style="color: white;text-align:center;display:none;" class="searchingtext">asdfsdfsdf</h1>
+	
+	<div style="text-align: center;width: 100%;display:block;">
+	<img id="movietosearch" src="{{moviesearch}}" alt="" width="200" height="200"/><span class="moviebox"  style="color: white;font-size : 24px;display:none;">Processing similar movies</span>
+	</div>
+	
+	<!-- <h1 style="color: white;text-align:center;display:none;" class="searchingtext">asdfsdfsdf</h1> -->
 	<h1 style="color: white;text-align:center;" class="searchresulttext">{{movieresult}}</h1>
 	
 	<div style="text-align: center;">

@@ -4,9 +4,11 @@ from movie_api import getMovieImage
 
 from django.http import HttpResponse
 
-def hello(request):
-    text = """<h1>Apptesting !</h1>"""
-    return HttpResponse(text)
+def getMoviePoster(request):
+    moviename =  request.GET.get('moviename')
+    moviename = r'%s'%(moviename)
+    imageurl = getMovieImage(moviename)
+    return HttpResponse(imageurl)
    
 def getmoviehomepage(request):
     return render(request, "./MovieRecommender/views/home.html", {"myvalue":"somevalue"})
@@ -15,7 +17,7 @@ def getmoviehomepage(request):
 def getresults(request):
     if request.method=="GET":
         data =  request.GET.get('search')
-        movieresultString = "Search For Similar Movies like "+data+" is Done!!!!"
+        movieresultString = r'Search For Similar Movies like %s is Done!!!!'%(data)
         recommended = call_recommend(data)
         movieStr = str(recommended)
         movieStr = movieStr.replace("[","")
