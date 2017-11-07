@@ -47,11 +47,15 @@
 		data: {'moviename':moviename},
 		success: function(data)
 					{
+						if(data =="None")
+						{
+						$('.searchresulttext').text("Movie Not found. Please enter a valid movie name!!!");
+						}
+						else{
 						imageurl = "https://image.tmdb.org/t/p/w500/" + data;
 						$('#movietosearch').attr('src',imageurl);
 						$('.moviebox').text("Processing similar movies");
 						$('.searchresulttext').text('');
-						$('.moviebox').css({'display':'block'});
 						$('body').css({'background-image':'url(https://i.pinimg.com/originals/3d/80/64/3d8064758e54ec662e076b6ca54aa90e.gif)'});
 						var count = 0;
 						timeoutfunc = setInterval(function(){
@@ -68,7 +72,9 @@
 									}
 									
 						}, 1000);
-					},
+						}
+					
+					}
 
 		})
 		
