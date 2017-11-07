@@ -17,11 +17,16 @@ def getmoviehomepage(request):
 def getresults(request):
     if request.method=="GET":
         data =  request.GET.get('search')
+        deleteSequels = request.GET.get('deletesequel')
+        deleteSequels = string2bool(deleteSequels)
+        print("value of deletesequel")
+        print(deleteSequels)
         movieresultString = r'Search For Similar Movies like %s is Done!!!!'%(data)
-        recommended = call_recommend(data)
+        recommended = call_recommend(data, deleteSequels)
         movieStr = str(recommended)
         movieStr = movieStr.replace("[","")
         movieStr = movieStr.replace("]","")
+        movieStr = movieStr.replace("\"","\'")
         print(movieStr)
         movieArr = movieStr.split('\',')
         imageurl = ''
@@ -29,7 +34,8 @@ def getresults(request):
         for movie in movieArr:
             print(movie)
             imgarray.append(getMovieImage(movie))
-            imageurl = getMovieImage(movie)
-    return render(request, "./MovieRecommender/views/home.html", {"output":str(recommended),"img":imgarray,"movieresult":movieresultString} )
+        return HttpResponse(imgarray)
+def string2bool(v):
+  return v.lower() in ("true")
    
    

@@ -22,6 +22,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^movies/', getmoviehomepage),
     url(r'^result/', getresults),
-    url(r'^hello/', getMoviePoster)
+    url(r'^movieposter/', getMoviePoster)
        
 ]

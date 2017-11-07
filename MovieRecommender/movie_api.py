@@ -78,7 +78,7 @@ def load_credit(df):
         df[column] = df[column].apply(json.dumps)
     return df
 
-def call_recommend(movie):
+def call_recommend(movie, deleteSequels):
     movie_id, movie_title = getMovieIdTitle(movie)
     if not movie_id:
         recommended = "Movie not found. Type correctly!!"
@@ -111,7 +111,7 @@ def call_recommend(movie):
     else:
         print("Movie found in the database!")
     print("Running recommendation")
-    recommended = movie_recommender(movie_title)
+    recommended = movie_recommender(movie_title, deleteSequels)
     return recommended
 def getMovieImage(movie):
     search_append = r'&query=%s&page=1&include_adult=false'%(movie)

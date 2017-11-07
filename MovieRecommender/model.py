@@ -127,7 +127,7 @@ def remove_sequels(film_selection):
     return film_list
 
 
-def find_similarities(df, id_entry, del_sequels = True, verbose = False):    
+def find_similarities(df, id_entry, del_sequels = False, verbose = False):
     if verbose: 
         print(90*'_' + '\n' + "QUERY: films similar to id={} -> '{}'".format(id_entry,
                                 df.iloc[id_entry]['movie_title']))

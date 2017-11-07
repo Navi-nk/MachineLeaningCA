@@ -18,13 +18,13 @@ def get_entry_id(df, movie):
     id_entry = df_movie_id_list.index(movie)
     return id_entry
 
-def movie_recommender(movie_title):
+def movie_recommender(movie_title, deleteSequels):
     df = get_combined_data_frame()
     movies_recommended = []
     popularity_list = []
     id_entry = get_entry_id(df, movie_title)
     print("recommended for:%s"%movie_title)
-    recommended_movies,all_movies_found  = find_similarities(df, id_entry=id_entry)
+    recommended_movies,all_movies_found  = find_similarities(df, id_entry=id_entry, del_sequels = deleteSequels)
     
     for j in range(len(all_movies_found)):
         popularity_list.append(all_movies_found[j][6])
