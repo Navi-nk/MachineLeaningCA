@@ -102,9 +102,9 @@ def critere_selection(title_main, max_users, annee_ref, titre, annee, imdb_score
 
 def add_to_selection(film_selection, parametres_films,id_entry):    
     film_list = film_selection[:]
-    icount = len(film_list)    
+    icount = len(film_list)   
     for i in range(31):
-        if(id_entry == parametres_films[i][5]) : continue
+        if(id_entry == parametres_films[i][7]) : continue
         already_in_list = False
         for s in film_selection:
             if s[0] == parametres_films[i][0]: already_in_list = True
