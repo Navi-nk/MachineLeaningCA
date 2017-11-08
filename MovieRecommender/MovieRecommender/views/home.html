@@ -54,6 +54,7 @@
 						else{
 						imageurl = "https://image.tmdb.org/t/p/w500/" + data;
 						$('#movietosearch').attr('src',imageurl);
+						$('#movietosearch').css({'display':'None'});
 						$('.moviebox').text("Processing similar movies");
 						$('.searchresulttext').text('');
 						$('body').css({'background-image':'url(https://i.pinimg.com/originals/3d/80/64/3d8064758e54ec662e076b6ca54aa90e.gif)'});
@@ -94,7 +95,9 @@
 						$("#image"+i).attr('src',imageurl);
 						}
 						clearTimeout(timeoutfunc);
-						$('.moviebox').text("Search for similar movies like "+moviename+" is done");
+						$('.moviebox').text("Search for movies similar to "+moviename+" is done");
+						$('.moviebox').css({'display':'block'});
+						$('#movietosearch').css({'display':'block','margin': '0 auto'});
 						$('body').css({'background-image':'none'});
 						
 					}
@@ -201,7 +204,7 @@ margin: 30px;
 	
 	
 	<div style="text-align: center;width: 100%;display:block;">
-	<img id="movietosearch" src="{{moviesearch}}" alt="" width="200" height="200"/><span class="moviebox"  style="color: white;font-size : 24px;display:none;">Processing similar movies</span>
+	<img id="movietosearch" src="{{moviesearch}}" alt="" width="500" height="750"/><span class="moviebox"  style="color: white;font-size : 24px;display:none;"></span>
 	</div>
 	
 	<!-- <h1 style="color: white;text-align:center;display:none;" class="searchingtext">asdfsdfsdf</h1> -->
