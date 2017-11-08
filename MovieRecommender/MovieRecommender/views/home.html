@@ -21,33 +21,44 @@
 	$(document).ready(function() {
 	$('.search').animate({width:'250px'}, 1000, function(){});
 	
+	var timeoutfunc;
 	
+	$('#search').keypress(function(e) {
+    if(e.which == 13) {
+        $('.searchicon').trigger('click');
+    }
+	});
 	
 	$('.searchicon').on('click' , function(){
 	    data = "Searching.......";
-	
+		$('.moviebox').text("");
 
         $('.searchresulttext').text(data);
 
 		
 		$('img').attr({'src':''});
 		$('.searchresulttext').css({'display':'block'});
-		
+		deletesequel = !confirm("Do you want to look for Sequel Movies as well? Press Ok to search for Sequel Movies")
 		
 		var moviename = $('.search').val();
 		$.ajax({
 		type: "GET",
-		url:"/hello",
+		url:"/movieposter",
 		data: {'moviename':moviename},
 		success: function(data)
 					{
+						if(data =="None")
+						{
+						$('.searchresulttext').text("Movie Not found. Please enter a valid movie name!!!");
+						}
+						else{
 						imageurl = "https://image.tmdb.org/t/p/w500/" + data;
 						$('#movietosearch').attr('src',imageurl);
+						$('.moviebox').text("Processing similar movies");
 						$('.searchresulttext').text('');
-						$('.moviebox').css({'display':'block'});
 						$('body').css({'background-image':'url(https://i.pinimg.com/originals/3d/80/64/3d8064758e54ec662e076b6ca54aa90e.gif)'});
 						var count = 0;
-						setInterval(function(){
+						timeoutfunc = setInterval(function(){
 									data = $('.moviebox').text()+".";
 									
 									count++;
@@ -61,10 +72,35 @@
 									}
 									
 						}, 1000);
-					},
+						}
+					
+					}
 
 		})
-		window.location.href = "/result?search="+moviename;
+		
+		$.ajax({
+		type: "GET",
+		url:"/result",
+		data: {'search':moviename,'deletesequel':deletesequel},
+		success: function(data)
+					{
+						
+						//alert(data);
+						dataArr = data.split("/");
+						for( i = 1 ; i < dataArr.length ; i++)
+						{
+						//alert(dataArr[i]);
+						imageurl = "https://image.tmdb.org/t/p/w500/" + dataArr[i];
+						$("#image"+i).attr('src',imageurl);
+						}
+						clearTimeout(timeoutfunc);
+						$('.moviebox').text("Search for similar movies like "+moviename+" is done");
+						$('body').css({'background-image':'none'});
+						
+					}
+
+		})
+		//window.location.href = "/result?search="+moviename;
 		
 	});
 	});
@@ -72,10 +108,7 @@
 	
 	
 	</script>
-	
-	<script src="js/main.js"></script>	
-	
-	<link rel="stylesheet" href="css/style.css">
+
 	
 	<style>
 	
@@ -175,11 +208,11 @@ margin: 30px;
 	<h1 style="color: white;text-align:center;" class="searchresulttext">{{movieresult}}</h1>
 	
 	<div style="text-align: center;">
-	<img src="https://image.tmdb.org/t/p/w500/{{img.0}}" alt=""/>
-	<img src="https://image.tmdb.org/t/p/w500/{{img.1}}" alt=""/>
-	<img src="https://image.tmdb.org/t/p/w500/{{img.2}}" alt=""/>
-	<img src="https://image.tmdb.org/t/p/w500/{{img.3}}" alt=""/>
-	<img src="https://image.tmdb.org/t/p/w500/{{img.4}}" alt=""/>
+	<img id="image1" src="https://image.tmdb.org/t/p/w500/{{img.0}}" alt=""/>
+	<img id="image2" src="https://image.tmdb.org/t/p/w500/{{img.1}}" alt=""/>
+	<img id="image3" src="https://image.tmdb.org/t/p/w500/{{img.2}}" alt=""/>
+	<img id="image4" src="https://image.tmdb.org/t/p/w500/{{img.3}}" alt=""/>
+	<img id="image5" src="https://image.tmdb.org/t/p/w500/{{img.4}}" alt=""/>
 	</div>
 	
 
