@@ -4,11 +4,17 @@
 1. pip install the below packages
 
 >>>django
+
 >>>requests
+
 >>>nltk
+
 >>>sklearn
+
 >>>fuzzywuzzy
+
 >>>numpy
+
 >>>pandas
 
 
@@ -16,6 +22,7 @@
 Go to the python interpreter and type:
 
 >>>import nltk
+
 >>>nltk.download()
 
 This will open a dialog. Select 'all' and then click 'download'
