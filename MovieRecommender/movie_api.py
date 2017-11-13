@@ -126,4 +126,4 @@ def getMovieImage(movie):
     return movie_image
 
 if __name__ == '__main__':
-    call_recommend('dumbo',True)
+    call_recommend('Transformers',True)

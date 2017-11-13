@@ -1,6 +1,7 @@
 import nltk
 import pandas as pd
 from nltk.corpus import wordnet
+from nltk import pos_tag
 
 PS = nltk.stem.PorterStemmer()
 
@@ -129,6 +130,10 @@ def replace_synonyms(df_keywords_cleaned, keywords):
         if len(liste_keywords) <= 1: continue       # no replacement
         if keyword == liste_keywords[0][0]: continue    # replacement by itself
 
+        icount += 1
+        if  icount < 80:
+            print('{:<12} -> {:<12} (init: {})'.format(keyword, liste_keywords[0][0], liste_keywords))
+
         replacement_dict[keyword] = liste_keywords[0][0]
 
     #Keywords that appear both in keys and values; key1->value1, value1->value2 => key1=value2 
@@ -140,19 +145,24 @@ def replace_synonyms(df_keywords_cleaned, keywords):
     
     return df_keywords_occurence, keywords
 
-def add_overview_keywords(df, keywords, bypass=False):
+def add_overview_keywords(df, bypass=False):
     if bypass : return df
+    
     for index, row in df.iterrows():
         if isinstance(row['overview'], str): 
-            liste_mot = row['overview'].replace('\D+', '').strip().split()
+            new_keyword = []
+            #print(row['overview'])
+            #for s in liste_mot:
+            s = nltk.word_tokenize(row['overview'])
+            #print(s)
+            tagged = nltk.pos_tag(s)
+            #print (tagged)
+            new_keyword= [x[0] for x in tagged if x[1][:1] == 'N']
+            #print (new_keyword)
+            
+            df.set_value(index, 'overview', '|'.join(new_keyword)) 
+            #df['plot_keywords']=df['plot_keywords'].map(str)+df['overview'].map(str)
         else:
             continue
-        new_keyword = []
-        for s in liste_mot:
-            lemma = get_synonymes(s)
-            for t in list(lemma):
-                if t in keywords: 
-                    new_keyword.append(t)                
-        if new_keyword:
-            df.set_value(index, 'plot_keywords', '|'.join(new_keyword)) 
+    df['plot_keywords']=df['plot_keywords']+df['overview']
     return df    

@@ -28,7 +28,7 @@ def movie_recommender(movie_title, deleteSequels):
     
     for j in range(len(all_movies_found)):
         popularity_list.append(all_movies_found[j][6])
-    print("Predicted movie popularity is %s"%popularity((popularity_list)))
+    #print("Predicted movie popularity is %s"%popularity((popularity_list)))
     
     for i in range(len(recommended_movies)):
         movie_title = recommended_movies[i][0]
