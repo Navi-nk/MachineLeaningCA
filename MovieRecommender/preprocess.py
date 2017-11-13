@@ -1,4 +1,3 @@
-#Custom libs
 from dataload import *
 from processkeywords import *
 from model import *
@@ -37,5 +36,4 @@ def preprocess():
 
 	df = df_keywords_occurence.copy(deep=True)
 	df.reset_index(inplace = True, drop = True)
-
-	df.to_pickle('../data/processedData.pkl')
+    df.to_pickle('../data/processedData.pkl')

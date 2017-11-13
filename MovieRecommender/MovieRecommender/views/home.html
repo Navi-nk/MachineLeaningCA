@@ -4,42 +4,27 @@
 <head>
 	<meta charset="utf-8">
 	<title>Movie Recommender Engine</title>
-	
-	
-	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>	
-	
-	
-	
-	
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	
 	<!-- <link rel="stylesheet" href="css/font-awesome.min.css"> -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script>
 	
 	$(document).ready(function() {
 	$('.search').animate({width:'250px'}, 1000, function(){});
-	
 	var timeoutfunc;
-	
 	$('#search').keypress(function(e) {
     if(e.which == 13) {
         $('.searchicon').trigger('click');
     }
 	});
-	
 	$('.searchicon').on('click' , function(){
 	    data = "Searching.......";
 		$('.moviebox').text("");
-
         $('.searchresulttext').text(data);
-
-		
 		$('img').attr({'src':''});
 		$('.searchresulttext').css({'display':'block'});
 		deletesequel = !confirm("Do you want to look for Sequel Movies as well? Press Ok to search for Sequel Movies")
-		
 		var moviename = $('.search').val();
 		$.ajax({
 		type: "GET",
@@ -47,11 +32,13 @@
 		data: {'moviename':moviename},
 		success: function(data)
 					{
-						if(data =="None")
+
+						if(data ==="None")
 						{
 						$('.searchresulttext').text("Movie Not found. Please enter a valid movie name!!!");
 						}
 						else{
+//						    $('.moviebox').text("Processing similar movies");
 						imageurl = "https://image.tmdb.org/t/p/w500/" + data;
 						$('#movietosearch').attr('src',imageurl);
 						$('#movietosearch').css({'display':'None'});
@@ -63,7 +50,7 @@
 									data = $('.moviebox').text()+".";
 									
 									count++;
-									if(count%5==0)
+									if(count%5===0)
 									{
 									$('.moviebox').text("Processing similar movies");
 									}
@@ -71,26 +58,19 @@
 									{
 									$('.moviebox').text(data);
 									}
-									
 						}, 1000);
 						}
-					
 					}
-
-		})
-		
+		});
 		$.ajax({
 		type: "GET",
 		url:"/result",
 		data: {'search':moviename,'deletesequel':deletesequel},
 		success: function(data)
 					{
-						
-						//alert(data);
 						dataArr = data.split("/");
 						for( i = 1 ; i < dataArr.length ; i++)
 						{
-						//alert(dataArr[i]);
 						imageurl = "https://image.tmdb.org/t/p/w500/" + dataArr[i];
 						$("#image"+i).attr('src',imageurl);
 						}
@@ -99,23 +79,17 @@
 						$('.moviebox').css({'display':'block'});
 						$('#movietosearch').css({'display':'block','margin': '0 auto'});
 						$('body').css({'background-image':'none'});
-						
-					}
-
+					},
+	    error: function(data)
+		{
+		    alert(data.responseText);
+		}
 		})
-		//window.location.href = "/result?search="+moviename;
-		
 	});
 	});
-	
-	
-	
+
 	</script>
-
-	
 	<style>
-	
-
 ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
   color: lightblue;
 }
@@ -128,7 +102,6 @@
 :-moz-placeholder { /* Firefox 18- */
   color: lightblue;
 }
-
 .loader{
   position: absolute
   left: 50%;
@@ -150,11 +123,9 @@
 	width:50px;
 	cursor: pointer;
 }
-
 .input-search-field{
 	height: 50px;
 	margin: 10px;
-	
 }
 .search{
 	height: 50px;
@@ -172,44 +143,22 @@ i.fa.fa-search.fa-2x{
 	text-align:center;
 	width:100%;
 }
-
 .input-row{
 margin: 30px;
 }
-	</style>
-
-	
+</style>
 </head>
 <body style="background: black no-repeat center center fixed;background-size: cover;">
-	
-	
-	<!--<div class="searchcontainer" align="center">
-	
-	<span class="searchicon" ><i class="fa fa-search fa-2x" aria-hidden="true" ></i></span><input id="search" name="search" class="form-control input-lg" placeholder="Search Movies" tabindex="1"></input>
-	<input type="submit"  class="btn btn-primary searchbutton" style=" margin-left: 100px;" value="Search">
-	
-	</div> -->
-	
-	
-	
 	<div class="input-row" align="center">
 		<div class="input-search-field">
 			<input type="text" class="search" name="search" placeholder="Search Movies" id="search" value="" required> 
 			<span class="searchicon" ><i class="fa fa-search fa-2x" aria-hidden="true" ></i></span>
-			
-			
-		</div>		
-		
+		</div>
 	</div>
-	
-	
 	<div style="text-align: center;width: 100%;display:block;">
 	<img id="movietosearch" src="{{moviesearch}}" alt="" width="500" height="750"/><span class="moviebox"  style="color: white;font-size : 24px;display:none;"></span>
 	</div>
-	
-	<!-- <h1 style="color: white;text-align:center;display:none;" class="searchingtext">asdfsdfsdf</h1> -->
 	<h1 style="color: white;text-align:center;" class="searchresulttext">{{movieresult}}</h1>
-	
 	<div style="text-align: center;">
 	<img id="image1" src="https://image.tmdb.org/t/p/w500/{{img.0}}" alt=""/>
 	<img id="image2" src="https://image.tmdb.org/t/p/w500/{{img.1}}" alt=""/>
@@ -217,9 +166,5 @@ margin: 30px;
 	<img id="image4" src="https://image.tmdb.org/t/p/w500/{{img.3}}" alt=""/>
 	<img id="image5" src="https://image.tmdb.org/t/p/w500/{{img.4}}" alt=""/>
 	</div>
-	
-
-
 </body>
-
 </html>
